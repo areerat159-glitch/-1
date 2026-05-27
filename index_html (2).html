@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>แบบทดสอบประวัติศาสตร์ ม.5</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      min-height: 100vh;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      border-radius: 25px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .header {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 38px;
+    }
+
+    .header p {
+      margin-top: 10px;
+      font-size: 18px;
+      opacity: 0.9;
+    }
+
+    .content {
+      padding: 30px;
+    }
+
+    .student-info {
+      background: #f3f4f6;
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+    }
+
+    .student-info input {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .question {
+      background: #fafafa;
+      padding: 25px;
+      border-radius: 20px;
+      margin-bottom: 25px;
+      border-left: 8px solid #6366f1;
+    }
+
+    .question h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: #312e81;
+    }
+
+    .option {
+      display: block;
+      margin: 10px 0;
+      padding: 14px;
+      border-radius: 14px;
+      border: 2px solid #ddd;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+    }
+
+    .option:hover {
+      background: #eef2ff;
+      border-color: #6366f1;
+      transform: translateY(-2px);
+    }
+
+    button {
+      display: block;
+      margin: 40px auto;
+      padding: 16px 40px;
+      border: none;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .dashboard {
+      display: none;
+      margin-top: 40px;
+      background: #f9fafb;
+      padding: 30px;
+      border-radius: 25px;
+    }
+
+    .dashboard-title {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #4f46e5;
+    }
+
+    .score-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin: 0;
+      color: #4f46e5;
+      font-size: 32px;
+    }
+
+    .review-item {
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 15px;
+    }
+
+    .correct {
+      background: #dcfce7;
+    }
+
+    .incorrect {
+      background: #fee2e2;
+    }
+
+    @media (max-width: 768px) {
+      .header h1 {
+        font-size: 28px;
+      }
+
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>แบบทดสอบออนไลน์</h1>
+    <p>เรื่อง เวลาและการแบ่งยุคสมัยทางประวัติศาสตร์สากล ระดับชั้น ม.5</p>
+    <p>วิชาประวัติศาสตร์สากล ส32102</p>
+    <p>ครูผู้สอน : คุณครูอารีรัตน์ เอี่ยมสอาด</p>
+  </div>
+
+  <div class="content">
+
+    <div class="student-info">
+      <input type="text" id="fullname" placeholder="ชื่อ - นามสกุล">
+      <input type="text" id="classroom" placeholder="ชั้น">
+      <input type="number" id="number" placeholder="เลขที่">
+    </div>
+
+    <form id="quizForm"></form>
+
+    <button type="button" onclick="submitQuiz()">ส่งคำตอบ</button>
+
+    <div class="dashboard" id="dashboard">
+
+      <h1 class="dashboard-title">แดชบอร์ดรายงานผลการสอบ</h1>
+
+      <div class="score-box">
+        <div class="card">
+          <p>ชื่อผู้สอบ</p>
+          <h3 id="showName"></h3>
+        </div>
+
+        <div class="card">
+          <p>คะแนน</p>
+          <h2 id="scoreText"></h2>
+        </div>
+
+        <div class="card">
+          <p>ผลการประเมิน</p>
+          <h2 id="levelText"></h2>
+        </div>
+      </div>
+
+      <div id="review"></div>
+
+      <button onclick="location.reload()">ทำแบบทดสอบใหม่</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  const questions = [
+    {
+      question: 'หลักฐานทางประวัติศาสตร์มีความสำคัญอย่างไร',
+      options: ['ใช้คาดเดาเหตุการณ์ในอนาคต','ใช้สร้างเรื่องราวให้สนุก','ใช้ศึกษาความเป็นมาของมนุษย์ในอดีต','ใช้แทนความคิดเห็นส่วนบุคคล'],
+      answer: 2
+    },
+    {
+      question: 'การนับเวลาแบบคริสต์ศักราชเริ่มต้นจากเหตุการณ์ใด',
+      options: ['การค้นพบทวีปอเมริกา','การประสูติของพระเยซูคริสต์','การสร้างกรุงโรม','การสิ้นสุดสงครามโลกครั้งที่ 1'],
+      answer: 1
+    },
+    {
+      question: 'พุทธศักราชมากกว่าคริสต์ศักราชกี่ปี',
+      options: ['365 ปี','500 ปี','543 ปี','632 ปี'],
+      answer: 2
+    },
+    {
+      question: 'ข้อใดเรียงลำดับยุคสมัยก่อนประวัติศาสตร์ได้ถูกต้อง',
+      options: ['ยุคหินใหม่ → ยุคหินเก่า → ยุคสำริด','ยุคหินเก่า → ยุคหินใหม่ → ยุคโลหะ','ยุคโลหะ → ยุคหินกลาง → ยุคหินเก่า','ยุคหินกลาง → ยุคโลหะ → ยุคหินใหม่'],
+      answer: 1
+    },
+    {
+      question: 'มนุษย์เริ่มรู้จักการเพาะปลูกและตั้งถิ่นฐานถาวรในยุคใด',
+      options: ['ยุคหินเก่า','ยุคหินกลาง','ยุคหินใหม่','ยุคเหล็ก'],
+      answer: 2
+    },
+    {
+      question: 'การแบ่งยุคสมัยทางประวัติศาสตร์สากลนิยมใช้สิ่งใดเป็นเกณฑ์สำคัญ',
+      options: ['จำนวนประชากร','ลักษณะภูมิประเทศ','เหตุการณ์สำคัญทางประวัติศาสตร์','สภาพภูมิอากาศ'],
+      answer: 2
+    },
+    {
+      question: 'ยุคโบราณสิ้นสุดลงจากเหตุการณ์ใด',
+      options: ['การล่มสลายของกรุงโรมตะวันตก','การปฏิวัติอุตสาหกรรม','การค้นพบทวีปอเมริกา','สงครามครูเสด'],
+      answer: 0
+    },
+    {
+      question: 'ยุคกลางของยุโรปมักถูกเรียกว่าอะไร',
+      options: ['ยุคแห่งเหตุผล','ยุคมืด','ยุคทอง','ยุคปฏิวัติ'],
+      answer: 1
+    },
+    {
+      question: 'เหตุการณ์ใดถือเป็นจุดเริ่มต้นของยุคใหม่',
+      options: ['การใช้เหล็ก','การล่มสลายของกรุงโรม','การค้นพบทวีปอเมริกา','การสร้างพีระมิด'],
+      answer: 2
+    },
+    {
+      question: 'ยุคปัจจุบันเริ่มต้นหลังเหตุการณ์ใด',
+      options: ['สงครามเย็น','สงครามโลกครั้งที่ 1','การปฏิวัติฝรั่งเศส','การปฏิวัติเกษตรกรรม'],
+      answer: 2
+    },
+    {
+      question: 'ศักราชหมายถึงอะไร',
+      options: ['ระบบการนับเวลา','ระบบการปกครอง','การบันทึกข้อมูล','การแบ่งพื้นที่'],
+      answer: 0
+    },
+    {
+      question: 'หลักฐานลายลักษณ์อักษรคือข้อใด',
+      options: ['ขวานหิน','โครงกระดูก','ศิลาจารึก','เครื่องปั้นดินเผา'],
+      answer: 2
+    },
+    {
+      question: 'มนุษย์ยุคหินเก่าใช้เครื่องมือแบบใด',
+      options: ['โลหะ','หินขัดเรียบ','หินกะเทาะหยาบ','พลาสติก'],
+      answer: 2
+    },
+    {
+      question: 'ข้อใดเป็นลักษณะสำคัญของยุคหินใหม่',
+      options: ['เร่ร่อน','ล่าสัตว์อย่างเดียว','เริ่มเพาะปลูก','สร้างโรงงาน'],
+      answer: 2
+    },
+    {
+      question: 'ประวัติศาสตร์หมายถึงอะไร',
+      options: ['การศึกษาดวงดาว','การศึกษาความเป็นมาของมนุษย์','การทำนายอนาคต','การสร้างนิทาน'],
+      answer: 1
+    }
+  ];
+
+  const quizForm = document.getElementById('quizForm');
+
+  questions.forEach((q, index) => {
+    const div = document.createElement('div');
+    div.className = 'question';
+
+    div.innerHTML = `
+      <h3>ข้อที่ ${index + 1} : ${q.question}</h3>
+      ${q.options.map((option, i) => `
+        <label class="option">
+          <input type="radio" name="question${index}" value="${i}">
+          ${option}
+        </label>
+      `).join('')}
+    `;
+
+    quizForm.appendChild(div);
+  });
+
+  function submitQuiz() {
+
+    const fullname = document.getElementById('fullname').value;
+    const classroom = document.getElementById('classroom').value;
+    const number = document.getElementById('number').value;
+
+    if (!fullname || !classroom || !number) {
+      alert('กรุณากรอกข้อมูลนักเรียนให้ครบถ้วน');
+      return;
+    }
+
+    let score = 0;
+    let reviewHTML = '';
+
+    questions.forEach((q, index) => {
+
+      const selected = document.querySelector(`input[name="question${index}"]:checked`);
+
+      let userAnswer = 'ไม่ได้ตอบ';
+      let isCorrect = false;
+
+      if (selected) {
+        userAnswer = q.options[selected.value];
+        isCorrect = Number(selected.value) === q.answer;
+
+        if (isCorrect) {
+          score++;
+        }
+      }
+
+      reviewHTML += `
+        <div class="review-item ${isCorrect ? 'correct' : 'incorrect'}">
+          <strong>ข้อที่ ${index + 1}</strong><br><br>
+          คำตอบของคุณ : ${userAnswer}<br>
+          เฉลย : ${q.options[q.answer]}
+        </div>
+      `;
+    });
+
+    let level = '';
+
+    if (score >= 13) {
+      level = 'ดีมาก';
+    } else if (score >= 10) {
+      level = 'ดี';
+    } else if (score >= 7) {
+      level = 'พอใช้';
+    } else {
+      level = 'ควรปรับปรุง';
+    }
+
+    document.getElementById('showName').innerText = `${fullname} | ${classroom} เลขที่ ${number}`;
+    document.getElementById('scoreText').innerText = `${score} / ${questions.length}`;
+    document.getElementById('levelText').innerText = level;
+    document.getElementById('review').innerHTML = reviewHTML;
+
+    document.getElementById('dashboard').style.display = 'block';
+
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth'
+    });
+  }
+</script>
+
+</body>
+</html>
